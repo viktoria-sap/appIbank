@@ -1,0 +1,1 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/l5wgorclokduee7n?svg=true)](https://ci.appveyor.com/project/viktoria-sap/appibank)

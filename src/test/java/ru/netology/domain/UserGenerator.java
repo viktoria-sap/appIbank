@@ -1,6 +1,5 @@
 package ru.netology.domain;
 
-import com.codeborne.selenide.Condition;
 import com.github.javafaker.Faker;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -11,9 +10,7 @@ import org.junit.jupiter.api.BeforeAll;
 
 import java.util.Locale;
 
-import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
 import static io.restassured.RestAssured.given;
 
 public class UserGenerator {
@@ -32,7 +29,6 @@ public class UserGenerator {
                 .log(LogDetail.ALL)
                 .build();
 
-        @BeforeAll
         static void setUpAll(RegistrationData registrationData) {
             given()
                     .spec(requestSpec)
@@ -72,46 +68,20 @@ public class UserGenerator {
             return registrationData;
         }
 
-        public static void validInfo() {
-            val person = UserGenerator.Registration.generateValidActiveUser();
-            $("input[name ='login']").setValue(person.getLogin());
-            $("input[name='password']").setValue(person.getPassword());
+        public static RegistrationData generateUserWithInvalidLogin() {
+            Faker faker = new Faker(new Locale("en"));
+            String password = faker.internet().password();
+            RegistrationData registrationData = new RegistrationData("petya", password, Status.active);
+            setUpAll(registrationData);
+            return new RegistrationData("vasya", password, Status.active);
         }
 
-        public static void validInfoButStatusBlocked() {
-            val person = UserGenerator.Registration.generateValidButBlockedUser();
-            $("input[name ='login']").setValue(person.getLogin());
-            $("input[name='password']").setValue(person.getPassword());
-        }
-
-        public static void withoutPassword() {
-            val person = UserGenerator.Registration.generateValidActiveUser();
-            $("input[name ='login']").setValue(person.getLogin());
-            $("input[name='password']").setValue(" ");
-        }
-
-        public static void withoutLogin() {
-            val person = UserGenerator.Registration.generateValidActiveUser();
-            $("input[name ='login']").setValue(" ");
-            $("input[name='password']").setValue(person.getPassword());
-        }
-
-        public static void validPasswordButNotValidLogin() {
-            val person = UserGenerator.Registration.generateValidActiveUser();
-            $("input[name ='login']").setValue("Anna");
-            $("input[name='password']").setValue(person.getPassword());
-        }
-
-        public static void validLoginButNotValidPassword() {
-            val person = UserGenerator.Registration.generateValidActiveUser();
-            $("input[name ='login']").setValue(person.getLogin());
-            $("input[name='password']").setValue("person");
-        }
-
-        public static void validInfoButWithoutRegistration() {
-            val person = UserGenerator.Registration.generateUserWithoutRegistration();
-            $("input[name ='login']").setValue(person.getLogin());
-            $("input[name='password']").setValue(person.getPassword());
+        public static RegistrationData generateUserWithInvalidPassword() {
+            Faker faker = new Faker(new Locale("en"));
+            String login = faker.name().firstName();
+            RegistrationData registrationData = new RegistrationData(login, "validpassword", Status.active);
+            setUpAll(registrationData);
+            return new RegistrationData(login, "invalidpassword", Status.active);
         }
     }
 }

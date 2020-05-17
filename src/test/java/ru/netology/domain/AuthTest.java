@@ -12,7 +12,9 @@ public class AuthTest {
     @Test
     void shouldWithValidInfo() {
         open("http://localhost:9999");
-        UserGenerator.Registration.validInfo();
+        val person = UserGenerator.Registration.generateValidActiveUser();
+        $("input[name ='login']").setValue(person.getLogin());
+        $("input[name='password']").setValue(person.getPassword());
         $("button[type='button'][data-test-id='action-login']").click();
         $(withText("Личный кабинет")).waitUntil(Condition.visible, 5000);
     }
@@ -20,39 +22,9 @@ public class AuthTest {
     @Test
     void shouldWithValidInfoButStatusBlocked() {
         open("http://localhost:9999");
-        UserGenerator.Registration.validInfoButStatusBlocked();
-        $("button[type='button'][data-test-id='action-login']").click();
-        $(withText("Ошибка")).waitUntil(Condition.visible, 5000);
-    }
-
-    @Test
-    void shouldWithoutPassword() {
-        open("http://localhost:9999");
-        UserGenerator.Registration.withoutPassword();
-        $("button[type='button'][data-test-id='action-login']").click();
-        $(withText("Поле обязательно для заполнения")).waitUntil(Condition.visible, 5000);
-    }
-
-    @Test
-    void shouldWithoutLogin() {
-        open("http://localhost:9999");
-        UserGenerator.Registration.withoutLogin();
-        $("button[type='button'][data-test-id='action-login']").click();
-        $(withText("Поле обязательно для заполнения")).waitUntil(Condition.visible, 5000);
-    }
-
-    @Test
-    void shouldValidPasswordButNotValidLogin() {
-        open("http://localhost:9999");
-        UserGenerator.Registration.validPasswordButNotValidLogin();
-        $("button[type='button'][data-test-id='action-login']").click();
-        $(withText("Ошибка")).waitUntil(Condition.visible, 5000);
-    }
-
-    @Test
-    void shouldValidLoginButNotValidPassword() {
-        open("http://localhost:9999");
-        UserGenerator.Registration.validLoginButNotValidPassword();
+        val person = UserGenerator.Registration.generateValidButBlockedUser();
+        $("input[name ='login']").setValue(person.getLogin());
+        $("input[name='password']").setValue(person.getPassword());
         $("button[type='button'][data-test-id='action-login']").click();
         $(withText("Ошибка")).waitUntil(Condition.visible, 5000);
     }
@@ -60,7 +32,49 @@ public class AuthTest {
     @Test
     void shouldValidInfoButWithoutRegistration() {
         open("http://localhost:9999");
-        UserGenerator.Registration.validInfoButWithoutRegistration();
+        val person = UserGenerator.Registration.generateUserWithoutRegistration();
+        $("input[name ='login']").setValue(person.getLogin());
+        $("input[name='password']").setValue(person.getPassword());
+        $("button[type='button'][data-test-id='action-login']").click();
+        $(withText("Ошибка")).waitUntil(Condition.visible, 5000);
+    }
+
+    @Test
+    void shouldWithoutPassword() {
+        open("http://localhost:9999");
+        val person = UserGenerator.Registration.generateValidActiveUser();
+        $("input[name ='login']").setValue(person.getLogin());
+        $("input[name='password']").setValue(" ");
+        $("button[type='button'][data-test-id='action-login']").click();
+        $(withText("Поле обязательно для заполнения")).waitUntil(Condition.visible, 5000);
+    }
+
+    @Test
+    void shouldWithoutLogin() {
+        open("http://localhost:9999");
+        val person = UserGenerator.Registration.generateValidActiveUser();
+        $("input[name ='login']").setValue(" ");
+        $("input[name='password']").setValue(person.getPassword());
+        $("button[type='button'][data-test-id='action-login']").click();
+        $(withText("Поле обязательно для заполнения")).waitUntil(Condition.visible, 5000);
+    }
+
+    @Test
+    void shouldValidPasswordButNotValidLogin() {
+        open("http://localhost:9999");
+        val person = UserGenerator.Registration.generateUserWithInvalidLogin();
+        $("input[name ='login']").setValue(person.getLogin());
+        $("input[name='password']").setValue(person.getPassword());
+        $("button[type='button'][data-test-id='action-login']").click();
+        $(withText("Ошибка")).waitUntil(Condition.visible, 5000);
+    }
+
+    @Test
+    void shouldValidLoginButNotValidPassword() {
+        open("http://localhost:9999");
+        val person = UserGenerator.Registration.generateUserWithInvalidPassword();
+        $("input[name ='login']").setValue(person.getLogin());
+        $("input[name='password']").setValue(person.getPassword());
         $("button[type='button'][data-test-id='action-login']").click();
         $(withText("Ошибка")).waitUntil(Condition.visible, 5000);
     }

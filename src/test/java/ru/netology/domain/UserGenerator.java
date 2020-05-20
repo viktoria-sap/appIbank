@@ -5,12 +5,9 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
-import lombok.val;
-import org.junit.jupiter.api.BeforeAll;
 
 import java.util.Locale;
 
-import static com.codeborne.selenide.Selenide.$;
 import static io.restassured.RestAssured.given;
 
 public class UserGenerator {
